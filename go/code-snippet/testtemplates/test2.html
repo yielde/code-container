@@ -1,0 +1,23 @@
+<!--
+ * @Author: Galen Tong
+ * @Date: 2022-12-19 15:22:08
+ * @LastEditTime: 2022-12-19 15:22:08
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {{`"output"`}} <br>
+    {{printf "%q" "output"}}<br>
+    {{"output" | printf "%q"}}<br>
+    {{printf "%q" (print "out" "put")}}<br>
+    {{"put" | printf "%s%s" "out" | printf "%q"}}<br>
+    {{"output" | printf "%s" | printf "%q"}}<br>
+</body>
+</html>

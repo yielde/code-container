@@ -12,13 +12,12 @@ change vps and proxy host settings
 
 getopts/sshpass/sed/bash
 
-
 # Python
-
-
 
 # Golang
 
 ## practice
 
-1. http lib use
+1. net/http
+2. html/templatete
+3. github.com/gin-gonic/gin

@@ -1,7 +1,7 @@
 /*
  * @Author: Galen Tong
  * @Date: 2022-12-18 21:35:10
- * @LastEditTime: 2022-12-19 10:34:52
+ * @LastEditTime: 2022-12-19 14:27:31
  * @Description:
  */
 package main
@@ -171,15 +171,15 @@ func testHttpServer2() {
 
 // concurrent processing
 
-func main() {
-	testGet()
-	testGet2()
-	testParseJson()
-	testAddHeader()
-	testPost()
-	testPost2()
-	testPostJson()
-	testClient()
-	testHttpServer()
-	testHttpServer2()
-}
+// func main() {
+// 	testGet()
+// 	testGet2()
+// 	testParseJson()
+// 	testAddHeader()
+// 	testPost()
+// 	testPost2()
+// 	testPostJson()
+// 	testClient()
+// 	testHttpServer()
+// 	testHttpServer2()
+// }
