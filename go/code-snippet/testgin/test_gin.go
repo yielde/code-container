@@ -1,7 +1,7 @@
 /*
  * @Author: Galen Tong
  * @Date: 2022-12-19 17:15:55
- * @LastEditTime: 2022-12-19 18:19:22
+ * @LastEditTime: 2022-12-20 14:29:57
  * @Description:
  */
 package main
@@ -30,13 +30,13 @@ func DoLogin(c *gin.Context) {
 	})
 }
 
-func main(){
-	e:=gin.Default()
-	e.LoadHTMLGlob("templates/*")
-	e.GET("/login", Login)
-	e.POST("/login", DoLogin)
-	e.Run()
-}
+// func main(){
+// 	e:=gin.Default()
+// 	e.LoadHTMLGlob("templates/*")
+// 	e.GET("/login", Login)
+// 	e.POST("/login", DoLogin)
+// 	e.Run()
+// }
 
 // func main() {
 // 	r := gin.Default()
