@@ -22,3 +22,4 @@ getopts/sshpass/sed/bash
 2. html/templatete
 3. github.com/gin-gonic/gin
 4. github.com/gin-contrib/sessions
+5. gorm.io/gorm
