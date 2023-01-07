@@ -1,14 +1,13 @@
 /*
  * @Author: Galen Tong
  * @Date: 2022-12-19 16:52:33
- * @LastEditTime: 2022-12-19 17:15:46
+ * @LastEditTime: 2023-01-05 14:01:58
  * @Description:
  */
 package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
