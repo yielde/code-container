@@ -1,10 +1,9 @@
 '''
 Author: Hui Tong <937013596@qq.com>
 Date: 2023-01-08 12:56:27
-LastEditTime: 2023-02-03 18:11:30
+LastEditTime: 2023-02-05 17:24:17
 Description: 
 '''
-import time
 import threading
 from mylog.log import MYLOG
 
@@ -37,7 +36,7 @@ class MyLoopThread(threading.Thread):
         '''
         停止loop线程
         '''
-        self.pre_start()
+        self.pre_stop()
         self.stop_flag.set()
 
     def run_loop(self):
@@ -60,7 +59,3 @@ class MyLoopThread(threading.Thread):
         '''
         Process after the thread has stopped
         '''
-
-
-if __name__ == '__main__':
-    pass

@@ -1,7 +1,7 @@
 '''
 Author: Hui Tong <937013596@qq.com>
 Date: 2023-02-03 17:55:47
-LastEditTime: 2023-02-03 18:12:03
+LastEditTime: 2023-02-05 19:32:38
 Description: 
 '''
 import time
@@ -19,9 +19,14 @@ def test():
     logger.info("Hello world!")
 
 
-if __name__ == '__main__':
+def TEST1():
     loopt = MyLoopThread(5, name="loopthread1", func=test)
     loopt.start()
     while True:
-        print("gggggg")
+        print("Main thread")
         time.sleep(1)
+
+
+
+if __name__ == '__main__':
+    pass
