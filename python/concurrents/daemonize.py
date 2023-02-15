@@ -1,8 +1,13 @@
+# -*- coding:utf-8 -*-
 import os
 import sys
 import signal
+import logging
+import time
+import atexit
 from mylog.log import MYLOG
 from threading import Event
+
 
 logger = MYLOG.get_logger(__file__)
 
@@ -54,30 +59,126 @@ class MyDamon:
         os.dup2(stdin.fileno(), sys.stdin.fileno())
         os.dup2(stdout.fileno(), sys.stdout.fileno())
         os.dup2(stderr.fileno(), sys.stderr.fileno())
+        atexit.register(self.clean_pid_file)
+        pid = str(os.getpid())
+        with open(self.pidfile, 'w+') as f:
+            f.write('%s\n' % pid)
 
     def clean_pid_file(self):
         os.remove(self.pidfile)
 
-    def handle_terminate(self, sig):
-        logger.info('received signal {}'.format(sig))
+    def handle_terminate(self, sig, frame):
+        logger.info('received signal {}, frame: {}'.format(sig, frame))
+        if self.daemon_running():
+            self._daemon_stopped.set()
+            self.terminate()
+
+    def handle_siguser1(self, sig, frame):
+        logger.info('received signal {}, frame: {}'.format(sig, frame))
+        self.siguser1()
+
+    def handle_siguser2(self, sig, frame):
+        logger.info('received signal {}, frame: {}'.format(sig, frame))
+        self.siguser2()
 
     def daemon_running(self, wait=0):
         if self.loop_init and wait > 0:
             wait = 0
             self.loop_init = False
-        return not self._daemon_stopped(wait)
+        return not self._daemon_stopped.wait(wait)
+
+    def get_pid(self):
+        try:
+            with open(self.pidfile, 'r') as f:
+                pid = f.read().strip()
+            pid = int(pid) if len(pid) > 0 else None
+        except IOError:
+            pid = None
+        return pid
 
     def start(self):
-        self.pre_start()
         self.damonize()
-        signal.signal(signal.SIGTERM)
+        signal.signal(signal.SIGTERM, self.handle_terminate)
+        signal.signal(signal.SIGUSR1, self.handle_siguser1)
+        signal.signal(signal.SIGUSR2, self.handle_siguser2)
+        daemon_name = self.__class__.__name__
+        self.pre_start()
+        try:
+            logger.info('Daemon {} start'.format(daemon_name))
+            self.run()
+            logger.info('Daemon {} stopped'.format(daemon_name))
+        except Exception as e:
+            logger.exception(
+                'Daemon {} terminates, Unexpected errors {}'.format(daemon_name, str(e)))
+
+    def stop(self):
+        pid = self.get_pid()
+
+        if not pid:
+            sys.stderr.write(
+                "pidfile {} does not exist, is daemon running?\n".format(pid))
+            return
+
+        timer = 0
+        try:
+            while True:
+                if timer == 0:
+                    os.kill(pid, signal.SIGTERM)
+                elif timer < self._kill_timeout:
+                    os.kill(pid, 0)
+                else:
+                    os.killpg(os.getpgid(pid), signal.SIGKILL)
+                time.sleep(1)
+                timer += 1
+        except OSError as e:
+            if str(e).find("No such process") > 0:
+                if os.path.exists(self.pidfile):
+                    os.remove(self.pidfile)
+            else:
+                print(str(e))
+                sys.exit(1)
+
+    def restart(self):
+        self.stop()
+        self.start()
+
+    def run(self):
+        '''
+        can be overridden.
+        your loop function, use self.daemon_running(loop_second) for while loop
+        '''
+
+    def siguser1(self):
+        '''
+        can be overridden.
+        use `kill SIGUSR1 pid_number` to use your sig handler, 
+        default is changing log level between info and debug
+        '''
+        new_level = logging.INFO if MYLOG.getLevel() == logging.DEBUG else logging.DEBUG
+        MYLOG.setLevel(new_level)
+        logger.info('Daemon {} log level is changed to {}'.format(
+            self.__class__.__name__, 'debug' if new_level == logging.DEBUG else 'info'))
+
+    def siguser2(self):
+        '''
+        can be overridden.
+        use `kill SIGUSR2 pid_number` to use your sig handler
+        '''
+
+    def terminate(self):
+        '''
+        can be overridden.
+        the work after SIGTERM received
+        '''
 
     def pre_start(self):
         '''
+        can be overridden.
         prepare for start daemon
         '''
 
     def pre_stop(self):
         '''
+        can be overridden.
         prepare for stop daemon
         '''
