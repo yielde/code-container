@@ -1,0 +1,9 @@
+user:
+  S3user1:
+    ak: 7D183DKX0IAAYVF0R7AO
+    sk: BUnPsKl0xIsiwgpLoCmeUPkSfFVtyORuke4Y9CNw
+  S3user2:
+    ak: U4E9M66VDQI47G6DJVA3
+    sk: 74oiH4Al4lJCl9y0NFQL1RKtGrVGg9BvviceH8UH
+
+endpoint: 172.17.73.114

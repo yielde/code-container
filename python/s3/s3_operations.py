@@ -7,14 +7,16 @@ Description:
 import os
 import boto3
 import unittest
+import yaml
+
+s3cli = None
 
 
 # 连接s3 server
-access_key = "ZDTLDIA60ARFWR2W7FCP"
-secret_key = "0PH7lAg6KQxMgBtJ6I8BK77VrK81LWkDbNarWMoR"
-url = "http://172.17.73.114"
-s3cli = boto3.session.Session(
-    access_key, secret_key).client('s3', endpoint_url=url)
+def connect_server(access_key, secret_key, url):
+    global s3cli
+    s3cli = boto3.session.Session(
+        access_key, secret_key).client('s3', endpoint_url='http://' + url)
 
 
 # 创建bucket
@@ -98,9 +100,9 @@ class TestS3Op(unittest.TestCase):
         delete_bucket(self.bucket_name)
 
 
-if __name__ == "__main__":
+def test_main():
     suite = unittest.TestSuite()
-    # suite.addTest(TestS3Op('test_create_bucket'))
+    suite.addTest(TestS3Op('test_create_bucket'))
     # suite.addTest(TestS3Op('test_list_buckets'))
     # suite.addTest(TestS3Op('test_put_object'))
     # suite.addTest(TestS3Op('test_list_objects'))
@@ -110,3 +112,12 @@ if __name__ == "__main__":
 
     runner = unittest.TextTestRunner()
     runner.run(suite)
+
+
+if __name__ == "__main__":
+    cf = './user.yaml'
+    with open(cf, 'r') as f:
+        out = yaml.load(f.read(), Loader=yaml.FullLoader)
+    connect_server(out['user']['S3user1']['ak'], out['user']
+                   ['S3user1']['sk'], out['endpoint'])
+    test_main()
