@@ -1,0 +1,37 @@
+{
+  "id": "4094382",
+  "name": "jdpro",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "33517",
+      "name": "cart_fill",
+      "font_class": "cartfill",
+      "unicode": "e6b9",
+      "unicode_decimal": 59065
+    },
+    {
+      "icon_id": "161453",
+      "name": "mine",
+      "font_class": "mine",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "712659",
+      "name": "order",
+      "font_class": "order",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "10166323",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    }
+  ]
+}
