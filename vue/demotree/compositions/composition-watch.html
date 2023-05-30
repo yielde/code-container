@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../../vue.global.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        const app = Vue.createApp({
+            setup(props) {
+                const { reactive, toRefs, watch, watchEffect } = Vue;
+                const nameObj = reactive({ name: 'galen', englishName: 'kevin' });
+                const { name, englishName } = toRefs(nameObj);
+
+                // lazy，首次渲染不会执行，属性变化执行
+                const stop1 = watch([name, englishName], ([currentValue, currentValue2], [prevValue, prevValue2]) => {
+                    console.log(currentValue, prevValue);
+                    console.log(currentValue2, prevValue2);
+                    setTimeout(() => {
+                        stop1()
+                    }, 5000)
+                })
+                // 立即执行，非lazy
+                // 自动感知代码依赖，但是无法获取prevValue
+                const stop = watchEffect(() => {
+                    console.log(englishName);
+                    console.log(name.value);
+                    setTimeout(() => {
+                        stop()
+                    }, 5000)
+
+                });
+                return { name, englishName }
+            },
+            template: `
+            <div>
+                <div>
+                    Name: <input v-model="name">
+                </div>
+                <div>
+                    Name is {{name}}
+                </div>
+                <div>
+                    Name: <input v-model="englishName">
+                </div>
+                <div>
+                    Name is {{englishName}}
+                </div>
+            </div>
+            `
+        });
+        const vm = app.mount('#root');
+    </script>
+</body>
+
+</html>

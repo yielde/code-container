@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../vue.global.js"></script>
+    <style>
+        @keyframes shake {
+            0% {
+                transform: translateX(-100px);
+            }
+
+            50% {
+                transform: translateX(-50px);
+            }
+
+            100% {
+                transform: translateX(50px);
+            }
+        }
+
+        .v-enter-from {
+            color: red;
+        }
+
+        .v-leave-to {
+            color: red;
+        }
+
+        .v-enter-active,
+        .v-leave-active {
+            animation: shake 2s;
+            transition: color 1.5s ease-in;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    show: true,
+                }
+            },
+            methods: {
+                handleClick() {
+                    this.show = !this.show;
+                }
+            },
+            template: `
+            <div>
+                <transition type="transition">
+                    <div v-show="show">hello world</div>
+                </transition>
+                <button @click="handleClick">切换</button>    
+            </div>
+            `
+        });
+        const vm = app.mount('#root');
+    </script>
+</body>
+
+</html>

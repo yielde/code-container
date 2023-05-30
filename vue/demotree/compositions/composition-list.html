@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../../vue.global.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        const listRelativeEffect = () => {
+            const { reactive } = Vue;
+            const list = reactive([]);
+            const addItemToList = (item, resetInputValue) => {
+                list.push(item);
+                resetInputValue();
+            };
+            return { list, addItemToList }
+        }
+
+        const inputRelativeEffect = () => {
+            const { ref } = Vue;
+            const inputValue = ref('');
+            const handleInputValueChange = (e) => {
+                inputValue.value = e.target.value;
+            };
+            const resetInputValue = () => {
+                inputValue.value = "";
+            }
+            return { inputValue, handleInputValueChange, resetInputValue };
+        }
+
+        const app = Vue.createApp({
+            setup() {
+                const { list, addItemToList } = listRelativeEffect();
+                const { inputValue, handleInputValueChange, resetInputValue } = inputRelativeEffect();
+                return { list, addItemToList, inputValue, handleInputValueChange, resetInputValue }
+            },
+
+            template: `
+            <div>
+                
+                <div>
+                    <div>{{inputValue}}</div>
+                    <input :value="inputValue" @input="handleInputValueChange"/>
+                    <button @click="addItemToList(inputValue, resetInputValue)">添加</button>
+                </div>
+                <div>
+                    <ul>
+                        <li v-for="item in list" :key="item">{{item}}</li> 
+                    </ul>
+                </div>
+            </div>
+            `
+        });
+        const vm = app.mount('#root');
+    </script>
+</body>
+
+</html>
