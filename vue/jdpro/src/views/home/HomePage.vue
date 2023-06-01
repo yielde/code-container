@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
-    <StaticPart/>
-    <NearbyPart/>
+    <StaticPart />
+    <NearbyPart />
   </div>
-  <DockerPart/>
+  <DockerPart />
 </template>
 <script>
 import StaticPart from './StaticPart'
@@ -18,9 +18,10 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../style/variables.scss";
 @import "../../style/mixins.scss";
+
 .wrapper {
   overflow-y: auto;
   position: absolute;

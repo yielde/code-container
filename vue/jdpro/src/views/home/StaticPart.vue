@@ -6,7 +6,7 @@
   </div>
   <div class="search">
     <i class="iconfont icon-search search__search-icon"></i>
-    <input class="search__input" value="miaomiao会员商城" />
+    <input class="search__input" placeholder="miaomiao会员商城"/>
   </div>
   <div class="banner">
     <img class="banner__img" src="http://www.dell-lee.com/imgs/vue3/banner.jpg" />
@@ -45,9 +45,10 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../style/variables.scss";
 @import "../../style/mixins.scss";
+
 .position {
   position: relative;
   padding: 0.16rem 0.24rem 0.16rem 0;

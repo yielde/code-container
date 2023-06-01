@@ -1,7 +1,7 @@
 <template>
   <div class="docker">
     <div v-for="(item, index) in dockerList" :key="item.icon"
-      :class="{'docker__item': true, 'docker__item--active': index===0}">
+      :class="{ 'docker__item': true, 'docker__item--active': index === 0 }">
       <div class="iconfont" :class="item.icon"></div>
       <div class="docker__title">{{ item.text }}</div>
     </div>
@@ -21,8 +21,9 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../style/variables.scss";
+
 .docker {
   display: flex;
   box-sizing: border-box;

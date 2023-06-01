@@ -6,10 +6,10 @@
       <div class="nearby__item__content">
         <div class="nearby__item__content__title">{{ item.title }}</div>
         <div class="nearby__item__content__tags">
-          <span class="nearby__item__content__tag" v-for="(tag,index) in item.tags" :key="index">{{ tag }}</span>
+          <span class="nearby__item__content__tag" v-for="(tag, index) in item.tags" :key="index">{{ tag }}</span>
         </div>
         <p class="nearby__item__content__highlight">
-         {{ item.desc }}
+          {{ item.desc }}
         </p>
       </div>
     </div>
@@ -54,9 +54,10 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../style/variables.scss";
 @import "../../style/mixins.scss";
+
 .nearby {
   &__title {
     margin: 0.16rem 0 0.02rem 0;
