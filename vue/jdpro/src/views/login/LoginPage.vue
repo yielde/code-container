@@ -10,33 +10,51 @@
     <div class="wrapper__login-button" @click="handleLogin">登录</div>
     <div class="wrapper__login-link" @click="handleToRegister">没有帐号？去注册</div>
   </div>
+  <ToastWind v-if="toastData.showToast" :message="toastData.toastMessage" />
 </template>
 <script>
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
+
 import { post } from '../../utils/request'
+import ToastWind, { useToastEffect } from '../../components/ToastWind.vue'
+
+const useLoginEffect = (showToast) => {
+  const router = useRouter()
+
+  const data = reactive({ username: '', password: '' })
+  const handleLogin = async () => {
+    try {
+      const result = await post('/user/login', { username: data.username, password: data.password })
+      if (result?.errno === 0) {
+        localStorage.isLogin = true
+        router.push({ name: 'HomePage' })
+      } else {
+        showToast('登录失败')
+      }
+    } catch (e) {
+      showToast('请求失败')
+    }
+  }
+  return { handleLogin, data }
+}
+
+const useToRegisterEffect = () => {
+  const router = useRouter()
+  const handleToRegister = () => {
+    router.push({ name: 'RegisterPage' })
+  }
+  return { handleToRegister }
+}
+
 export default {
   name: 'LoginPage',
+  components: { ToastWind },
   setup () {
-    const router = useRouter()
-    const data = reactive({ username: '', password: '' })
-    const handleLogin = async () => {
-      try {
-        const result = await post('/user/login', { username: data.username, password: data.password })
-        if (result.errno === 0) {
-          localStorage.isLogin = true
-          router.push({ name: 'HomePage' })
-        } else {
-          alert('登录失败')
-        }
-      } catch (e) {
-        alert(e)
-      }
-    }
-    const handleToRegister = () => {
-      router.push({ name: 'RegisterPage' })
-    }
-    return { handleLogin, handleToRegister, data }
+    const { toastData, showToast } = useToastEffect()
+    const { handleLogin, data } = useLoginEffect(showToast)
+    const { handleToRegister } = useToRegisterEffect()
+    return { handleLogin, handleToRegister, data, toastData }
   }
 }
 </script>
