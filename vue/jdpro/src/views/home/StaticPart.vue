@@ -83,6 +83,7 @@ export default {
     line-height: 0.32rem;
     background: #f5f5f5;
     border: none;
+    outline: none;
     border-radius: 0.16rem;
     padding-left: 0.3rem;
     width: 100%;

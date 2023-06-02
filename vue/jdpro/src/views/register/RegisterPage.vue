@@ -88,6 +88,7 @@ export default {
       border: none;
       line-height: .48rem;
       width: 100%;
+      outline: none;
 
       &::placeholder {
         color: #777777;

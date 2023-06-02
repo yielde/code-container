@@ -7,8 +7,8 @@
 </template>
 <script>
 import StaticPart from './StaticPart'
-import NearbyPart from './NearbyPart.vue'
-import DockerPart from './DockerPart.vue'
+import NearbyPart from './NearbyPart'
+import DockerPart from './DockerPart'
 export default {
   name: 'HomePage',
   components: {
