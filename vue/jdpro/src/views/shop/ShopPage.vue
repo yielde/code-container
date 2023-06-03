@@ -8,38 +8,54 @@
         <input class="search__content__input" placeholder="请输入商品名称" />
       </div>
     </div>
-    <ShopInfoPart :item="item" />
+    <ShopInfoPart :item="data.item" v-show="data.item.imgUrl" />
   </div>
+  <content-part />
 </template>
 <script>
-import { useRouter } from 'vue-router'
+import { reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { get } from '../../utils/request'
 import ShopInfoPart from '@/components/ShopInfoPart'
+import ContentPart from './ContentPart'
+
+const useShopInfoEffect = () => {
+  // 路由路径相关信息
+  const route = useRoute()
+  const data = reactive({ item: {} })
+  const getItemData = async () => {
+    const result = await get(`/shop/${route.params.id}`)
+    if (result?.errno === 0 && result?.data) {
+      data.item = result.data
+    }
+  }
+  getItemData()
+  return { data }
+}
+
+const useBackRouteEffect = () => {
+  const router = useRouter()
+  const handleBackClick = () => {
+    // 返回上一页
+    router.back()
+  }
+  return { handleBackClick }
+}
+
 export default {
   name: 'ShopPage',
-  components: { ShopInfoPart },
+  components: { ShopInfoPart, ContentPart },
   setup () {
-    const item = {
-      slogan: 'VIP尊享满89元减4元运费券（每月3张）',
-      expressPrice: 18,
-      id: 40,
-      name: '沃尔玛',
-      imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-      sales: 19,
-      expressLimit: 73
-    }
-    const router = useRouter()
-    const handleBackClick = () => {
-      // 返回上一页
-      router.back()
-    }
-
-    return { item, handleBackClick }
+    const { handleBackClick } = useBackRouteEffect()
+    const { data } = useShopInfoEffect()
+    return { data, handleBackClick }
   }
 }
 </script>
 <style lang="scss" scoped>
+@import '../../style/variables.scss';
 .wrapper {
-  padding: 0 .18rem;
+  padding: 0 .18rem .02rem .18rem;
 }
 
 .search {
@@ -73,7 +89,7 @@ export default {
       border: none;
       outline: none;
       background: none;
-      color: #333333;
+      color: $content-fontcolor;
     }
   }
 }

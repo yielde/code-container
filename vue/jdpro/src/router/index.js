@@ -21,7 +21,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "RegisterPage" */'../views/register/RegisterPage')
   },
   {
-    path: '/shop',
+    path: '/shop/:id',
     name: 'ShopPage',
     component: () => import(/* webpackChunkName: "ShopPage" */'../views/shop/ShopPage')
   }

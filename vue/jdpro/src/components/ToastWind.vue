@@ -22,6 +22,8 @@ export const useToastEffect = () => {
 }
 </script>
 <style lang="scss" scoped>
+@import '../style/variables.scss';
+
 .toast {
   position: fixed;
   left: 50%;
@@ -29,7 +31,7 @@ export const useToastEffect = () => {
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, .35);
   border-radius: .05rem;
-  color: #FFFFFF;
+  color: $bg-color;
   padding: .1rem;
 }
 </style>
