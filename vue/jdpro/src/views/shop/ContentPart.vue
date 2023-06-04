@@ -16,9 +16,9 @@
             <span class="product__item__detail__origin">&yen;{{ item.oldPrice }}</span>
           </p>
           <div class="product__item__number">
-            <span class="product__item__number__minus">-</span>
-            1
-            <span class="product__item__number__plus">+</span>
+            <span class="product__item__number__minus" @click="delCartItem(shopId, item.id)">-</span>
+            {{ cartList?.[shopId]?.[item.id]?.count || 0 }}
+            <span class="product__item__number__plus" @click="addItemToCart(shopId, item.id, item)">+</span>
           </div>
         </div>
       </div>
@@ -27,6 +27,7 @@
 </template>
 <script>
 import { reactive, ref, watchEffect } from 'vue'
+import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { get } from '@/utils/request'
 
@@ -40,9 +41,7 @@ const useTabEffect = () => {
   return { currentTab, handleTabClick }
 }
 
-const useCurrentListEffect = (tab) => {
-  const route = useRoute()
-  const shopId = route.params.id
+const useCurrentListEffect = (tab, shopId) => {
   const content = reactive({ list: {} })
   const getContentData = async () => {
     const result = await get(`/shop/${shopId}/products`, { tab: tab.value })
@@ -54,12 +53,30 @@ const useCurrentListEffect = (tab) => {
   return { content }
 }
 
+const useCartEffect = () => {
+  const store = useStore()
+  const cartList = store.state.cartList
+
+  const addItemToCart = (shopId, productId, productInfo) => {
+    store.commit('addItemToCart', { shopId, productId, productInfo })
+  }
+
+  const delCartItem = (shopId, productId) => {
+    store.commit('delCartItem', { shopId, productId })
+  }
+  return { cartList, addItemToCart, delCartItem }
+}
+
 export default {
   name: 'ContentPart',
   setup () {
+    const route = useRoute()
+    const shopId = route.params.id
+
     const { currentTab, handleTabClick } = useTabEffect()
-    const { content } = useCurrentListEffect(currentTab)
-    return { category, currentTab, handleTabClick, content }
+    const { content } = useCurrentListEffect(currentTab, shopId)
+    const { cartList, addItemToCart, delCartItem } = useCartEffect()
+    return { category, currentTab, handleTabClick, content, cartList, shopId, addItemToCart, delCartItem }
   }
 }
 </script>

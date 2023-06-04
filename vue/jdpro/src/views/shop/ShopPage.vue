@@ -11,6 +11,7 @@
     <ShopInfoPart :item="data.item" v-show="data.item.imgUrl" />
   </div>
   <content-part />
+  <CartPart />
 </template>
 <script>
 import { reactive } from 'vue'
@@ -18,6 +19,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { get } from '../../utils/request'
 import ShopInfoPart from '@/components/ShopInfoPart'
 import ContentPart from './ContentPart'
+import CartPart from './CartPart.vue'
 
 const useShopInfoEffect = () => {
   // 路由路径相关信息
@@ -44,7 +46,7 @@ const useBackRouteEffect = () => {
 
 export default {
   name: 'ShopPage',
-  components: { ShopInfoPart, ContentPart },
+  components: { ShopInfoPart, ContentPart, CartPart },
   setup () {
     const { handleBackClick } = useBackRouteEffect()
     const { data } = useShopInfoEffect()
@@ -54,6 +56,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '../../style/variables.scss';
+
 .wrapper {
   padding: 0 .18rem .02rem .18rem;
 }
