@@ -10,7 +10,7 @@
     </div>
     <ShopInfoPart :item="data.item" v-show="data.item.imgUrl" />
   </div>
-  <content-part />
+  <contentPart :shopName="data.name" />
   <CartPart />
 </template>
 <script>
@@ -19,7 +19,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { get } from '../../utils/request'
 import ShopInfoPart from '@/components/ShopInfoPart'
 import ContentPart from './ContentPart'
-import CartPart from './CartPart.vue'
+import CartPart from './CartPart'
 
 const useShopInfoEffect = () => {
   // 路由路径相关信息

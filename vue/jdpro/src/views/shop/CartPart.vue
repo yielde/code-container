@@ -1,15 +1,15 @@
 <template>
-  <div class="mask" v-if="showCart"></div>
+  <div class="mask" v-if="showCart" @click="handleshowCart"></div>
   <div class="cart">
     <div class="product" v-show="showCart">
       <div class="product__header">
         <div class="product__header__all">
-          <span class="product__header__all__icon iconfont" :class="allChecked ? 'icon-checked' : 'icon-checked1'"
-            @click="setCartAllChecked(shopId)"></span>
+          <span class="product__header__all__icon iconfont"
+            :class="caculations.allChecked ? 'icon-checked' : 'icon-checked1'" @click="setCartAllChecked(shopId)"></span>
           全选
         </div>
-        <div class="product__header__clear" @click="cleanCartProducts(shopId)">
-          清空购物车
+        <div class="product__header__clear">
+          <span class="product__header__clear__btn" @click="cleanCartProducts(shopId)">清空购物车</span>
         </div>
       </div>
       <!-- template占位判断数量为0时，不展示count内容 -->
@@ -36,10 +36,12 @@
     <div class="bill">
       <div class="bill__icon">
         <img src="../../assets/images/购物车.png" class="bill__icon__img" @click="handleshowCart" />
-        <div class="bill__icon__tag">{{ total }}</div>
+        <div class="bill__icon__tag">{{ caculations.total }}</div>
       </div>
-      <div class="bill__info">总计:<span class="bill__info__price"> &yen;{{ price }}</span></div>
-      <div class="bill__btn">去结算</div>
+      <div class="bill__info">总计:<span class="bill__info__price"> &yen;{{ caculations.price }}</span></div>
+      <div class="bill__btn">
+        <router-link :to="{ name: 'HomePage' }">去结算</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -54,49 +56,35 @@ const useCartEffect = (shopId) => {
   const store = useStore()
   const cartList = store.state.cartList
   const showCart = ref(false)
-  const total = computed(() => {
-    const productList = cartList[shopId]
-    let count = 0
+  const caculations = computed(() => {
+    const productList = cartList[shopId]?.productList
+    const result = { total: 0, price: 0, allChecked: true }
     if (productList) {
       for (const i in productList) {
         const product = productList[i]
-        count += product.count
+        result.total += product.count
       }
-    }
-    return count
-  })
 
-  const price = computed(() => {
-    const productList = cartList[shopId]
-    let price = 0
-    if (productList) {
       for (const i in productList) {
         const product = productList[i]
         if (product.check) {
-          price += product.count * product.price
+          result.price += product.count * product.price
         }
       }
-    }
-    return price.toFixed(2)
-  })
 
-  const productList = computed(() => {
-    const productList = cartList[shopId] || []
-    return productList
-  })
-
-  const allChecked = computed(() => {
-    const productList = cartList[shopId]
-    let result = true
-    if (productList) {
       for (const i in productList) {
         const product = productList[i]
         if (product.count > 0 && !product.check) {
-          result = false
+          result.allChecked = false
         }
       }
     }
+    result.price = result.price.toFixed(2)
     return result
+  })
+  const productList = computed(() => {
+    const productList = cartList[shopId]?.productList || {}
+    return productList
   })
 
   const changeCartProductItemCheck = (shopId, productId) => {
@@ -113,14 +101,16 @@ const useCartEffect = (shopId) => {
   }
 
   const handleshowCart = () => {
-    showCart.value = !showCart.value
+    if (caculations.value.total > 0) {
+      showCart.value = !showCart.value
+    } else {
+      showCart.value = false
+    }
   }
 
   const { addItemToCart, delCartItem } = useCommonCartEffect()
-
   return {
-    total,
-    price,
+    caculations,
     showCart,
     handleshowCart,
     productList,
@@ -128,19 +118,18 @@ const useCartEffect = (shopId) => {
     delCartItem,
     changeCartProductItemCheck,
     cleanCartProducts,
-    allChecked,
     setCartAllChecked
   }
 }
 
 export default {
   name: 'CartPage',
+  props: ['shopName'],
   setup () {
     const route = useRoute()
     const shopId = route.params.id
     const {
-      total,
-      price,
+      caculations,
       showCart,
       handleshowCart,
       productList,
@@ -148,13 +137,11 @@ export default {
       delCartItem,
       changeCartProductItemCheck,
       cleanCartProducts,
-      allChecked,
       setCartAllChecked
     } = useCartEffect(shopId)
 
     return {
-      total,
-      price,
+      caculations,
       showCart,
       handleshowCart,
       productList,
@@ -163,7 +150,6 @@ export default {
       shopId,
       changeCartProductItemCheck,
       cleanCartProducts,
-      allChecked,
       setCartAllChecked
     }
   }
@@ -241,8 +227,13 @@ export default {
     width: .98rem;
     background-color: #4fb0f9;
     color: $bg-color;
-    font-size: .14rem;
+    font-size: .16rem;
     text-align: center;
+
+    a {
+      color: $bg-color;
+      text-decoration: none;
+    }
   }
 }
 
@@ -250,17 +241,21 @@ export default {
   flex: 1;
   overflow-y: scroll;
   background-color: $bg-color;
+  // 商品过多展示屏幕80%
+  max-height: 80vh;
 
   &__header {
     display: flex;
     line-height: .52rem;
     border-bottom: 1px solid $content-background-color;
     padding: 0 .16rem;
-    color: #0091ff;
-    font-size: .18rem;
+    font-size: .16rem;
 
     &__all {
+      color: $content-fontcolor;
+
       &__icon {
+        color: #0091ff;
         font-size: .2rem;
       }
     }
@@ -271,6 +266,10 @@ export default {
       font-size: .14rem;
       margin-right: .16rem;
       color: $content-fontcolor;
+
+      &__btn {
+        display: inline-block;
+      }
     }
   }
 

@@ -17,8 +17,8 @@
           </p>
           <div class="product__item__number">
             <span class="product__item__number__minus" @click="delCartItem(shopId, item.id)">-</span>
-            {{ cartList?.[shopId]?.[item.id]?.count || 0 }}
-            <span class="product__item__number__plus" @click="addItemToCart(shopId, item.id, item)">+</span>
+            {{ cartList?.[shopId]?.productList?.[item.id]?.count || 0 }}
+            <span class="product__item__number__plus" @click="addItemToCart(shopId, item.id, item, shopName)">+</span>
           </div>
         </div>
       </div>
@@ -63,6 +63,7 @@ const useCartEffect = () => {
 
 export default {
   name: 'ContentPart',
+  props: ['shopName'],
   setup () {
     const route = useRoute()
     const shopId = route.params.id
