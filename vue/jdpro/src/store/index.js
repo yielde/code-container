@@ -17,6 +17,7 @@ export default createStore({
         product.count = 0
       }
       product.count += 1
+      product.check = true
       shopInfo[productId] = product
       state.cartList[shopId] = shopInfo
       console.log(state.cartList[shopId][productId].name, state.cartList[shopId][productId].count)
@@ -31,6 +32,19 @@ export default createStore({
       shopInfo[productId] = product
       state.cartList[shopId] = shopInfo
       console.log(state.cartList[shopId][productId].name, state.cartList[shopId][productId].count)
+    },
+    changeCartProductItemCheck (state, payload) {
+      const productItem = state.cartList[payload.shopId][payload.productId]
+      productItem.check = !productItem.check
+    },
+    cleanCartProducts (state, payload) {
+      state.cartList[payload.shopId] = {}
+    },
+    setCartAllChecked (state, payload) {
+      const productList = state.cartList[payload.shopId]
+      for (const i in productList) {
+        productList[i].check = true
+      }
     }
   },
   actions: {

@@ -31,6 +31,8 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { get } from '@/utils/request'
 
+import { useCommonCartEffect } from './commonCartEffect'
+
 const category = [{ name: '全部商品', tab: 'all' }, { name: '秒杀', tab: 'seckill' }, { name: '新鲜水果', tab: 'fruit' }]
 
 const useTabEffect = () => {
@@ -56,15 +58,7 @@ const useCurrentListEffect = (tab, shopId) => {
 const useCartEffect = () => {
   const store = useStore()
   const cartList = store.state.cartList
-
-  const addItemToCart = (shopId, productId, productInfo) => {
-    store.commit('addItemToCart', { shopId, productId, productInfo })
-  }
-
-  const delCartItem = (shopId, productId) => {
-    store.commit('delCartItem', { shopId, productId })
-  }
-  return { cartList, addItemToCart, delCartItem }
+  return { cartList }
 }
 
 export default {
@@ -72,10 +66,10 @@ export default {
   setup () {
     const route = useRoute()
     const shopId = route.params.id
-
+    const { addItemToCart, delCartItem } = useCommonCartEffect()
     const { currentTab, handleTabClick } = useTabEffect()
     const { content } = useCurrentListEffect(currentTab, shopId)
-    const { cartList, addItemToCart, delCartItem } = useCartEffect()
+    const { cartList } = useCartEffect()
     return { category, currentTab, handleTabClick, content, cartList, shopId, addItemToCart, delCartItem }
   }
 }
