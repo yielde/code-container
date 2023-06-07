@@ -26,12 +26,10 @@
   </div>
 </template>
 <script>
-import { reactive, ref, watchEffect } from 'vue'
-import { useStore } from 'vuex'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { get } from '@/utils/request'
 
-import { useCommonCartEffect } from './commonCartEffect'
+import { useCommonCartEffect } from './../../effects/cartEffects'
 
 const category = [{ name: '全部商品', tab: 'all' }, { name: '秒杀', tab: 'seckill' }, { name: '新鲜水果', tab: 'fruit' }]
 
@@ -43,31 +41,13 @@ const useTabEffect = () => {
   return { currentTab, handleTabClick }
 }
 
-const useCurrentListEffect = (tab, shopId) => {
-  const content = reactive({ list: {} })
-  const getContentData = async () => {
-    const result = await get(`/shop/${shopId}/products`, { tab: tab.value })
-    if (result?.errno === 0 && result?.data) {
-      content.list = result.data
-    }
-  }
-  watchEffect(() => { getContentData() })
-  return { content }
-}
-
-const useCartEffect = () => {
-  const store = useStore()
-  const cartList = store.state.cartList
-  return { cartList }
-}
-
 export default {
   name: 'ContentPart',
   props: ['shopName'],
   setup () {
     const route = useRoute()
     const shopId = route.params.id
-    const { addItemToCart, delCartItem } = useCommonCartEffect()
+    const { addItemToCart, delCartItem, useCurrentListEffect, useCartEffect } = useCommonCartEffect()
     const { currentTab, handleTabClick } = useTabEffect()
     const { content } = useCurrentListEffect(currentTab, shopId)
     const { cartList } = useCartEffect()

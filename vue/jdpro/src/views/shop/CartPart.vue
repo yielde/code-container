@@ -27,7 +27,7 @@
             <div class="product__item__number">
               <span class="product__item__number__minus" @click="delCartItem(shopId, item.id)">-</span>
               {{ item.count || 0 }}
-              <span class="product__item__number__plus" @click="addItemToCart(shopId, item.id, item)">+</span>
+              <span class="product__item__number__plus" @click="addItemToCart(shopId, item.id, item, shopName)">+</span>
             </div>
           </div>
         </div>
@@ -40,87 +40,15 @@
       </div>
       <div class="bill__info">总计:<span class="bill__info__price"> &yen;{{ caculations.price }}</span></div>
       <div class="bill__btn">
-        <router-link :to="{ name: 'HomePage' }">去结算</router-link>
+        <router-link :to="{ path: `/order-confirm/${shopId}` }">去结算</router-link>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
-import { useCommonCartEffect } from './commonCartEffect'
-
-const useCartEffect = (shopId) => {
-  const store = useStore()
-  const cartList = store.state.cartList
-  const showCart = ref(false)
-  const caculations = computed(() => {
-    const productList = cartList[shopId]?.productList
-    const result = { total: 0, price: 0, allChecked: true }
-    if (productList) {
-      for (const i in productList) {
-        const product = productList[i]
-        result.total += product.count
-      }
-
-      for (const i in productList) {
-        const product = productList[i]
-        if (product.check) {
-          result.price += product.count * product.price
-        }
-      }
-
-      for (const i in productList) {
-        const product = productList[i]
-        if (product.count > 0 && !product.check) {
-          result.allChecked = false
-        }
-      }
-    }
-    result.price = result.price.toFixed(2)
-    return result
-  })
-  const productList = computed(() => {
-    const productList = cartList[shopId]?.productList || {}
-    return productList
-  })
-
-  const changeCartProductItemCheck = (shopId, productId) => {
-    store.commit('changeCartProductItemCheck', { shopId, productId })
-  }
-
-  const cleanCartProducts = (shopId) => {
-    store.commit('cleanCartProducts', { shopId })
-    showCart.value = false
-  }
-
-  const setCartAllChecked = (shopId) => {
-    store.commit('setCartAllChecked', { shopId })
-  }
-
-  const handleshowCart = () => {
-    if (caculations.value.total > 0) {
-      showCart.value = !showCart.value
-    } else {
-      showCart.value = false
-    }
-  }
-
-  const { addItemToCart, delCartItem } = useCommonCartEffect()
-  return {
-    caculations,
-    showCart,
-    handleshowCart,
-    productList,
-    addItemToCart,
-    delCartItem,
-    changeCartProductItemCheck,
-    cleanCartProducts,
-    setCartAllChecked
-  }
-}
+import { useCommonCartEffect } from './../../effects/cartEffects'
 
 export default {
   name: 'CartPage',
@@ -129,25 +57,25 @@ export default {
     const route = useRoute()
     const shopId = route.params.id
     const {
-      caculations,
       showCart,
-      handleshowCart,
       productList,
+      caculations,
       addItemToCart,
       delCartItem,
-      changeCartProductItemCheck,
       cleanCartProducts,
-      setCartAllChecked
-    } = useCartEffect(shopId)
+      setCartAllChecked,
+      handleshowCart,
+      changeCartProductItemCheck
+    } = useCommonCartEffect(shopId)
 
     return {
-      caculations,
-      showCart,
-      handleshowCart,
-      productList,
-      addItemToCart,
-      delCartItem,
       shopId,
+      showCart,
+      caculations,
+      productList,
+      delCartItem,
+      handleshowCart,
+      addItemToCart,
       changeCartProductItemCheck,
       cleanCartProducts,
       setCartAllChecked

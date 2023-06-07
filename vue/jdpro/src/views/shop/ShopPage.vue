@@ -8,13 +8,13 @@
         <input class="search__content__input" placeholder="请输入商品名称" />
       </div>
     </div>
-    <ShopInfoPart :item="data.item" v-show="data.item.imgUrl" />
+    <ShopInfoPart :item="item" v-show="item.imgUrl" />
   </div>
-  <contentPart :shopName="data.name" />
+  <contentPart :shopName="item.name" />
   <CartPart />
 </template>
 <script>
-import { reactive } from 'vue'
+import { reactive, toRefs } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { get } from '../../utils/request'
 import ShopInfoPart from '@/components/ShopInfoPart'
@@ -32,7 +32,8 @@ const useShopInfoEffect = () => {
     }
   }
   getItemData()
-  return { data }
+  const { item } = toRefs(data)
+  return { item }
 }
 
 const useBackRouteEffect = () => {
@@ -49,8 +50,8 @@ export default {
   components: { ShopInfoPart, ContentPart, CartPart },
   setup () {
     const { handleBackClick } = useBackRouteEffect()
-    const { data } = useShopInfoEffect()
-    return { data, handleBackClick }
+    const { item } = useShopInfoEffect()
+    return { item, handleBackClick }
   }
 }
 </script>
