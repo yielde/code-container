@@ -171,6 +171,7 @@ export default {
   background-color: $bg-color;
   // 商品过多展示屏幕80%
   max-height: 80vh;
+  padding-top: .52rem;
 
   &__header {
     display: flex;
@@ -178,6 +179,12 @@ export default {
     border-bottom: 1px solid $content-background-color;
     padding: 0 .16rem;
     font-size: .16rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 1;
 
     &__all {
       color: $content-fontcolor;
