@@ -1,12 +1,8 @@
-/*
- * @Author: Hui Tong
- * @Date: 2023-07-22 23:26:02
- * @LastEditTime: 2023-07-22 23:56:22
- * @Description:
- */
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
+
 int main() {
   pid_t childpid;
   int fd[2];
