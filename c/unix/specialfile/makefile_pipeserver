@@ -1,0 +1,11 @@
+.PHONY : clean all
+all : pipeserver pipeclient
+
+pipeserver: pipeserver.o ../restart.o
+	cc -o pipeserver pipeserver.o ../restart.o
+
+pipeclient: pipeclient.o ../restart.o
+	cc -o pipeclient pipeclient.o ../restart.o
+
+clean :	
+	rm pipeserver pipeserver.o pipeclient pipeclient.o ../restart.o

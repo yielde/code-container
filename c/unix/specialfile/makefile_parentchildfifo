@@ -1,0 +1,11 @@
+
+objects = parentchildfifo.o dofifochild.o dofifoparent.o ../restart.o
+parentchildfifo : $(objects)
+	cc -o parentchildfifo $(objects)
+
+$(objects) : ../restart.h
+
+.PHONY : clean
+
+clean:
+	rm parentchildfifo $(objects)
