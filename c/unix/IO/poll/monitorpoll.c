@@ -19,38 +19,36 @@ void monitorpoll(int fd[], int numfds) {
   int bytesread;
   struct pollfd *pollfd;
 
-  for (int i = 0; i < numfds; i++) {
+  for (int i = 0; i < numfds; i++)
     if (fd[i] > 0) numnow++;
-    if ((pollfd = (void *)calloc(numfds, sizeof(struct pollfd))) == NULL)
-      return;
-    for (int i = 0; i < numfds; i++) {
-      (pollfd + i)->fd = *(fd + 1);
-      (pollfd + i)->events = POLLRDNORM;
-    }
-    while (numnow > 0) {
-      numready = poll(pollfd, numfds, -1);
-      if ((numready == -1) && (errno == EINTR))
-        continue;
-      else if (numready == -1)
-        break;
-      for (int i = 0; i<numfds && & numready> 0; i++) {
-        if ((pollfd + i)->revents) {
-          if ((pollfd + i)->revents & (POLLRDNORM | POLLIN)) {
-            bytesread = r_read(fd[i], buf, BUFSIZE);
-            numready--;
-            if (bytesread > 0)
-              docommand(buf, bytesread);
-            else
-              bytesread = -1;
-          } else if ((pollfd + i)->revents & (POLLERR | POLLHUP))
-            bytesread = -1;
+  if ((pollfd = (void *)calloc(numfds, sizeof(struct pollfd))) == NULL) return;
+  for (int i = 0; i < numfds; i++) {
+    (pollfd + i)->fd = *(fd + 1);
+    (pollfd + i)->events = POLLRDNORM;
+  }
+  while (numnow > 0) {
+    numready = poll(pollfd, numfds, -1);
+    if ((numready == -1) && (errno == EINTR))
+      continue;
+    else if (numready == -1)
+      break;
+    for (int i = 0; i<numfds && & numready> 0; i++) {
+      if ((pollfd + i)->revents) {
+        if ((pollfd + i)->revents & (POLLRDNORM | POLLIN)) {
+          bytesread = r_read(fd[i], buf, BUFSIZE);
+          numready--;
+          if (bytesread > 0)
+            docommand(buf, bytesread);
           else
-            bytesread = 0;
-          if (bytesread == -1) {
-            r_close(fd[i]);
-            (pollfd + i)->fd = -1;
-            numnow--;
-          }
+            bytesread = -1;
+        } else if ((pollfd + i)->revents & (POLLERR | POLLHUP))
+          bytesread = -1;
+        else
+          bytesread = 0;
+        if (bytesread == -1) {
+          r_close(fd[i]);
+          (pollfd + i)->fd = -1;
+          numnow--;
         }
       }
     }
