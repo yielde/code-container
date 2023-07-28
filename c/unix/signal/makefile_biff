@@ -1,0 +1,11 @@
+biff: notifyonoff.o biff.o
+	cc -o biff notifyonoff.o biff.o
+
+notifyonoff.o: notifyonoff.c
+	cc -g -c notifyonoff.c
+
+biff.o: biff.c notifyonoff.h
+	cc -g -c biff.c
+
+clean:
+	rm biff biff.o notifyonoff.o
