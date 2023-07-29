@@ -1,0 +1,26 @@
+# objects = asyncsignalmain.o asyncmonitorsignal.o ../restart.o
+
+# CFLAGS += -g
+
+# asyncsignalmain: $(objects)
+# 	cc -g -o asyncsignalmain $(objects)
+# asyncsignalmain.o : asyncmonitorsignal.h
+# asyncmonitorsignal.o : ../restart.h
+
+# clean:
+# 	rm asyncsignalmain $(objects)
+
+asyncsignalmain : asyncsignalmain.o asyncmonitorsignal.o restart.o
+	cc -o asyncsignalmain asyncsignalmain.o asyncmonitorsignal.o ../restart.o
+
+restart.o : ../restart.c
+	cc -g -c ../restart.c
+
+asyncsignalmain.o : asyncmonitorsignal.h asyncsignalmain.c
+	cc -g -c asyncsignalmain.c
+
+asyncmonitorsignal.o : ../restart.h asyncmonitorsignal.c
+	cc -g -c asyncmonitorsignal.c
+
+clean:
+	rm asyncmonitorsignal.o asyncsignalmain.o ../restart.o asyncsignalmain
