@@ -1,0 +1,11 @@
+asyncpollmain: asyncpollmain.o asyncmonitorpoll.o
+	cc -g -o asyncpollmain asyncpollmain.o asyncmonitorpoll.o
+
+asyncpollmain.o: asyncpollmain.c asyncmonitorpoll.h
+	cc -g -c asyncpollmain.c
+
+asyncmonitorpoll.o: asyncmonitorpoll.c
+	cc -g -c asyncmonitorpoll.c
+
+clean:
+	rm asyncpollmain asyncpollmain.o asyncmonitorpoll.o
