@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define BILLION 100000000L
+#define BILLION 1000000000L
 #define NUMDIF 20
 
 int main(void) {

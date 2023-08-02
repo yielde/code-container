@@ -4,7 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define BILLION 100000000L
+#define BILLION 1000000000L
 #define TIMER_MSG "Received Timer Interrupt\n"
 
 static void interrupt(int signo, siginfo_t *info, void *context) {
@@ -28,7 +28,6 @@ static int setperiodic(double sec) {
   timer_t timerid;
   struct itimerspec value;
   if (timer_create(CLOCK_REALTIME, NULL, &timerid) == -1) return -1;
-  fprintf(stderr, "%d\n", );
   value.it_interval.tv_sec = (long)sec;
   value.it_interval.tv_nsec = (sec - value.it_interval.tv_sec) * BILLION;
 
