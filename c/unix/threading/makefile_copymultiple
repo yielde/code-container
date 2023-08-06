@@ -1,0 +1,14 @@
+copymultiple: copyfilepass.o restart.o copymultiple.o
+	cc -o copymultiple copyfilepass.o restart.o copymultiple.o
+
+restart.o: ../restart.h ../restart.c
+	cc -o restart.o -c ../restart.c
+
+copymultiple.o: copymultiple.c
+	cc -o copymultiple.o -c copymultiple.c
+
+copyfilepass.o: copyfilepass.c ../restart.h
+	cc -o copyfilepass.o -c copyfilepass.c 
+
+clean:
+	rm -rf copymultiple copyfilepass.o restart.o copymultiple.o

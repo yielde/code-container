@@ -1,0 +1,14 @@
+callcopypass: copyfilepass.o restart.o callcopypass.o
+	cc -o callcopypass copyfilepass.o restart.o callcopypass.o
+
+callcopypass.o: callcopypass.c ../restart.h
+	cc -o callcopypass.o -c callcopypass.c
+
+restart.o: ../restart.c ../restart.h
+	cc -o restart.o -c ../restart.c
+
+copyfilepass.o: ../restart.h copyfilepass.c
+	cc -o copyfilepass.o -c copyfilepass.c
+
+clean:
+	rm callcopypass copyfilepass.o restart.o callcopypass.o
