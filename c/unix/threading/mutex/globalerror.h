@@ -10,3 +10,5 @@ int setdone();
 
 int randsafe(double *randp);
 void *computethread(void *arg1);
+
+int showresults();
