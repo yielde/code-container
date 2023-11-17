@@ -1,4 +1,5 @@
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -29,7 +30,8 @@ int main(int argc, char *argv[]) {
 
   int ret =
       bind(sock, (struct sockaddr *)&server_address, sizeof(server_address));
-  assert(ret != -1);
+  if (ret == -1)
+    cout << "errno is: " << errno << "means: " << gai_strerror(errno) << endl;
   ret = listen(sock, 5);
   assert(ret != -1);
   struct sockaddr_in client_address;
@@ -37,7 +39,7 @@ int main(int argc, char *argv[]) {
   int connfd =
       accept(sock, (struct sockaddr *)&client_address, &client_addrlength);
   if (connfd < 0)
-    cout << "errno is: " << errno << endl;
+    cout << "errno is: " << errno << "means: " << strerror(errno) << endl;
 
   else {
     char buffer[BUFESIZE];
