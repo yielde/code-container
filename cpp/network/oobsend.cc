@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
               sizeof(server_address)) < 0)
     cout << "connection failed" << endl;
   else {
+    cout << "send data" << endl;
     const char *oob_data = "abc";
     const char *normal_data = "123";
     send(sockfd, normal_data, strlen(normal_data), 0);
