@@ -195,6 +195,12 @@ class ListBTree {
   }
   void CreateBTreeAccordPI(BtreeNode<T> *&tnode, const char *pP_T,
                            const char *pI_T, int n);
+
+  void CreateBTreeAccordIPost(const char *pPost_T, const char *pI_T) {
+    CreateBTreeAccordIPost(root, pPost_T, pI_T, strlen(pPost_T));
+  }
+  void CreateBTreeAccordIPost(BtreeNode<T> *&tnode, const char *pPost_T,
+                              const char *pI_T, int n);
   void ReleaseNode(BtreeNode<T> *node);
   void CreateBtreeAcorrdPT(const char *pstr);
   void CreateBtreeAcorrdPTRecu(BtreeNode<T> *&tnode, const char *&pstr);
@@ -313,6 +319,27 @@ void ListBTree<T>::CreateBTreeAccordPI(BtreeNode<T> *&tnode, const char *pP_T,
 }
 
 template <typename T>
+void ListBTree<T>::CreateBTreeAccordIPost(BtreeNode<T> *&tnode,
+                                          const char *pPost_T, const char *pI_T,
+                                          int n) {
+  if (n == 0) {
+    tnode = nullptr;
+  } else {
+    int index = 0;
+    while (pPost_T[n - 1] != pI_T[index]) {
+      index++;
+    }
+    tnode->data = pI_T[index];
+    tnode->leftChild = nullptr;
+    tnode->rightChild = nullptr;
+
+    CreateBTreeAccordIPost(tnode->leftChild, pPost_T, pI_T, index);
+    CreateBTreeAccordIPost(tnode->rightChild, pPost_T + index, pI_T + index + 1,
+                           n - index - 1);
+  }
+}
+
+template <typename T>
 void ListBTree<T>::ReleaseNode(BtreeNode<T> *node) {
   if (node != nullptr) {
     ReleaseNode(node->leftChild);
@@ -353,10 +380,15 @@ void ListBTree<T>::BreadthOrder(BtreeNode<T> *tnode) {
     queue.DeQueue(v);
     cout << v->data;
     if (v->leftChild != nullptr) {
+      cout << v->data << "左进" << endl;
       queue.EnQueue(v->leftChild);
+      cout << v->data << "左出" << endl;
     }
+    queue.DisplayQueue();
     if (v->rightChild != nullptr) {
+      cout << v->data << "右进" << endl;
       queue.EnQueue(v->rightChild);
+      cout << v->data << "右出" << endl;
     }
   }
   BLACK_LINE
