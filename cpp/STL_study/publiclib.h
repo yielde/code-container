@@ -6,6 +6,7 @@
 using namespace std;
 
 #define STRIP_LINE                               \
+  cout << endl;                                  \
   fill_n(ostream_iterator<char>(cout), 50, '*'); \
   cout << endl;
 
